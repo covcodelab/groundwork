@@ -16,10 +16,9 @@ import argparse
 import json
 import sys
 
-from groundwork.findings import Severity, summarise
-
 from groundwork.catalogue.model import CatalogueLoadError, load
 from groundwork.catalogue.rules import REGISTRY, run
+from groundwork.findings import Severity, summarise
 
 
 def cmd_rules() -> int:
@@ -53,14 +52,19 @@ def main(argv: list[str] | None = None) -> int:
     counts = summarise(findings)
 
     if args.json:
-        print(json.dumps({
-            "checker": "catcheck",
-            "input": str(cat.path),
-            "entries": len(cat),
-            "findings": [f.as_dict() for f in findings],
-            "errors": counts[Severity.ERROR],
-            "warnings": counts[Severity.WARNING],
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "checker": "catcheck",
+                    "input": str(cat.path),
+                    "entries": len(cat),
+                    "findings": [f.as_dict() for f in findings],
+                    "errors": counts[Severity.ERROR],
+                    "warnings": counts[Severity.WARNING],
+                },
+                indent=2,
+            )
+        )
         return 1 if counts[Severity.ERROR] else 0
 
     for f in findings:

@@ -19,22 +19,49 @@ import yaml
 COUNTRIES = {"england", "wales", "scotland", "northern-ireland", "ew", "gb", "uk"}
 TIERS = {"open", "licensed", "internal", "restricted"}
 GRAINS = {
-    "lsoa", "data-zone", "soa", "oa", "msoa",
-    "uprn", "postcode", "ward", "lad", "fra", "point",
+    "lsoa",
+    "data-zone",
+    "soa",
+    "oa",
+    "msoa",
+    "uprn",
+    "postcode",
+    "ward",
+    "lad",
+    "fra",
+    "point",
 }
 BOUNDARY_VINTAGES = {
-    "lsoa01", "lsoa11", "lsoa21",
-    "dz01", "dz11",
-    "soa01", "soa11",
-    "oa01", "oa11", "oa21",
-    "msoa11", "msoa21",
-    "uprn", "none", "both",
+    "lsoa01",
+    "lsoa11",
+    "lsoa21",
+    "dz01",
+    "dz11",
+    "soa01",
+    "soa11",
+    "oa01",
+    "oa11",
+    "oa21",
+    "msoa11",
+    "msoa21",
+    "uprn",
+    "none",
+    "both",
 }
 JOIN_VIA = {"direct", "gazetteer", "postcode-lookup", "best-fit-lookup", "spatial"}
 GEOMETRIES = {"none", "point", "polygon", "multipolygon"}
 REDISTRIBUTION = {"attribution", "permitted", "derived-only", "check-contract", "prohibited"}
 ACCESS = {"download", "api", "request", "manual"}
-CADENCE = {"annual", "decennial", "quarterly", "six-weekly", "monthly", "continuous", "irregular", "static"}
+CADENCE = {
+    "annual",
+    "decennial",
+    "quarterly",
+    "six-weekly",
+    "monthly",
+    "continuous",
+    "irregular",
+    "static",
+}
 STATUS = {"draft", "reviewed"}
 
 VOCABULARIES: dict[str, set[str]] = {
@@ -51,8 +78,15 @@ VOCABULARIES: dict[str, set[str]] = {
 }
 
 REQUIRED_FIELDS = [
-    "id", "title", "publisher", "country",
-    "url", "licence", "tier", "grain", "boundary_vintage",
+    "id",
+    "title",
+    "publisher",
+    "country",
+    "url",
+    "licence",
+    "tier",
+    "grain",
+    "boundary_vintage",
 ]
 
 #: Which boundary vintages are coherent for a given grain. Grains absent from
@@ -113,7 +147,8 @@ class Entry:
 
     def not_comparable_ids(self) -> set[str]:
         return {
-            i["id"] for i in (self.get("not_comparable_with") or [])
+            i["id"]
+            for i in (self.get("not_comparable_with") or [])
             if isinstance(i, dict) and "id" in i
         }
 
