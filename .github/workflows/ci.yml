@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  UV_VERSION: "0.12.15"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # setup-uv only publishes floating major tags up to v7; newer releases must
+      # be pinned to an exact tag, or every job fails at "Set up job".
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      # --locked fails if uv.lock is missing or stale, which is the point.
+      # Run `uv lock` locally and commit the result.
+      - name: Install the project
+        run: uv sync --locked --dev
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Format check
+        run: uv run ruff format --check .
+
+      - name: Test
+        run: uv run pytest
+
+      # The catalogue is data, so it can be checked. This is the gate that
+      # keeps a pull request from introducing a dangling reference or a grain
+      # that contradicts its boundary vintage.
+      - name: Check the catalogue
+        run: uv run catcheck catalogue.yaml
