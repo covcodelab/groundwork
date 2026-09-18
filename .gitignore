@@ -1,0 +1,78 @@
+# ---------------------------------------------------------------------------
+# DATA — safety net, not a control.
+#
+# This repository describes sources. It never contains them. Nothing derived
+# from Acorn, OS AddressBase Plus, service records or any personal data
+# belongs here on any branch.
+#
+# catalogue.yaml at the repository root is the exception that proves the rule:
+# it is metadata about data, and it is the point of the project.
+# ---------------------------------------------------------------------------
+
+*.csv
+*.tsv
+*.parquet
+*.geoparquet
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.gdb/
+*.mdb
+*.accdb
+*.xlsx
+*.xls
+*.sqlite
+*.db
+*.duckdb
+*.pmtiles
+*.mbtiles
+*.tif
+*.tiff
+
+data/
+raw/
+cache/
+interim/
+processed/
+outputs/
+
+# ---------------------------------------------------------------------------
+# Secrets
+# ---------------------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.*
+
+# ---------------------------------------------------------------------------
+# Python / uv
+#
+# uv.lock is deliberately NOT ignored. It is the reproducibility guarantee and
+# CI runs `uv sync --locked`, which fails if it is missing or stale.
+# ---------------------------------------------------------------------------
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---------------------------------------------------------------------------
+# Editors and OS
+# ---------------------------------------------------------------------------
+
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db

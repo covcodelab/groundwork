@@ -1,0 +1,791 @@
+# Source catalogue — draft v0.1
+#
+# Twenty entries covering the working set for UK fire and rescue risk analysis.
+# Every entry is status: draft — the shape is considered, the facts need
+# checking against the publisher before anyone relies on them.
+#
+# Facts verified 17 Sep 2026 are marked in the caveats. Everything else is
+# drafted from working knowledge and needs confirming.
+
+version: 1
+
+sources:
+
+  # ---------------------------------------------------------------------
+  # Deprivation — four nations, four indices, none comparable with another
+  # ---------------------------------------------------------------------
+
+  - id: imd-2025
+    dataset: english-indices-of-deprivation
+    title: English Indices of Deprivation 2025
+    publisher: Ministry of Housing, Communities and Local Government
+    country: england
+    url: https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025
+    description: Relative deprivation for small areas in England, overall index and seven domains.
+    keywords: [deprivation, imd, iod, poverty, index]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa21
+    key: LSOA21CD
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [xlsx, csv]
+    reference_period: "2021–2024"
+    reference_period_note: >
+      No single reference date. Benefits data March 2024, employment 2022/23
+      financial year, census-derived indicators 2021.
+    update_cadence: irregular
+    supersedes: imd-2019
+    superseded_by: null
+    caveats:
+      - "Not directly comparable with IoD2019 or earlier: 20 new indicators, 14 substantially modified, and a changed shrinkage methodology (area classification rather than local authority means). Verified against the ID2025 technical report, 17 Sep 2026."
+      - "First release on LSOA21. Joining to anything on LSOA11 requires an explicit conversion."
+      - "Ranks and deciles are ordinal. Never area-weight them across a boundary change — convert scores if you must convert at all, and prefer OHID's published boundary-adjusted versions."
+    not_comparable_with:
+      - { id: imd-2019, reason: "Different boundary generation, indicators and shrinkage method; officially 'less directly comparable'." }
+      - { id: wimd-2025, reason: "Separately constructed national index. Cross-border comparison is meaningless." }
+      - { id: simd-2020, reason: "Separately constructed national index." }
+      - { id: nimdm-2017, reason: "Separately constructed national index." }
+    see_also: [lsoa-2021-boundaries-ew, census-2021-ew-households]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: imd-2019
+    dataset: english-indices-of-deprivation
+    title: English Indices of Deprivation 2019
+    publisher: Ministry of Housing, Communities and Local Government
+    country: england
+    url: https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019
+    description: Previous English deprivation index. Still widely embedded in existing models and reports.
+    keywords: [deprivation, imd, iod, 2019]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa11
+    key: LSOA11CD
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [xlsx, csv]
+    reference_period: "2015–2016 (most indicators)"
+    update_cadence: irregular
+    supersedes: imd-2015
+    superseded_by: imd-2025
+    caveats:
+      - "On LSOA11. Joining this to Census 2021 on an LSOA code is the single most common silent error in this domain — the codes look compatible and are not."
+      - "Comparable with IMD 2010 and 2015; not with IoD 2025."
+      - "OHID publish versions adjusted onto later boundaries. Prefer those to a bespoke conversion — they are citable."
+    not_comparable_with:
+      - { id: imd-2025, reason: "Different boundary generation, indicators and shrinkage method." }
+    see_also: [lsoa-2011-boundaries-ew, lsoa-2011-to-2021-lookup]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: wimd-2025
+    dataset: welsh-index-of-multiple-deprivation
+    title: Welsh Index of Multiple Deprivation 2025
+    publisher: Welsh Government
+    country: wales
+    url: https://www.gov.wales/welsh-index-multiple-deprivation-2025
+    description: Relative deprivation for small areas in Wales.
+    keywords: [deprivation, wimd, wales, cymru]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa21
+    key: LSOA21CD
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv, xlsx]
+    reference_period: "2025 release"
+    update_cadence: irregular
+    supersedes: wimd-2019
+    superseded_by: null
+    caveats:
+      - "Current version is 2025, not 2019 — verified 17 Sep 2026. Anything citing WIMD 2019 as current is out of date."
+      - "Separately constructed from IMD. A Welsh LSOA's WIMD decile says nothing about how it would rank in England."
+      - "Boundary vintage needs confirming against the publication — stated here as lsoa21 and NOT verified."
+    not_comparable_with:
+      - { id: imd-2025, reason: "Different index, different methodology, different country." }
+    see_also: [lsoa-2021-boundaries-ew]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: simd-2020
+    dataset: scottish-index-of-multiple-deprivation
+    title: Scottish Index of Multiple Deprivation 2020 (v2)
+    publisher: Scottish Government
+    country: scotland
+    url: https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/
+    description: Relative deprivation for data zones in Scotland.
+    keywords: [deprivation, simd, scotland, data zone]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: data-zone
+    boundary_vintage: dz11
+    key: DataZone
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv, xlsx]
+    reference_period: "2020"
+    update_cadence: irregular
+    supersedes: simd-2016
+    superseded_by: null
+    caveats:
+      - "Still the current version as of 17 Sep 2026 (verified via simd.scot, which serves SIMD 2020v2). An update has been signalled but not published."
+      - "Scotland uses data zones, not LSOAs. Different unit, different population thresholds, no direct equivalence."
+      - "SIMD 2012 used different geographies again."
+    not_comparable_with:
+      - { id: imd-2025, reason: "Different index and different geographic unit entirely." }
+    see_also: []
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: nimdm-2017
+    dataset: ni-multiple-deprivation-measure
+    title: Northern Ireland Multiple Deprivation Measure 2017
+    publisher: Northern Ireland Statistics and Research Agency
+    country: northern-ireland
+    url: https://www.nisra.gov.uk/statistics/deprivation-and-poverty/northern-ireland-multiple-deprivation-measure-2017-nimdm2017
+    description: Relative deprivation for small areas in Northern Ireland.
+    keywords: [deprivation, nimdm, northern ireland, nisra]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: soa
+    boundary_vintage: soa01
+    key: SOA Code
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [xlsx, csv]
+    reference_period: "2017"
+    update_cadence: irregular
+    supersedes: nimdm-2010
+    superseded_by: null
+    caveats:
+      - "Current version as of 17 Sep 2026 and now eight years old — by some distance the stalest of the four national indices."
+      - "Super Output Areas are the NI unit. NISRA has since published 2021 Data Zones; confirm which geography NIMDM2017 is published on before joining. Stated here as soa01 and NOT verified."
+    not_comparable_with:
+      - { id: imd-2025, reason: "Different index, different unit, different country." }
+    status: draft
+    entry_added: 2026-09-17
+
+  # ---------------------------------------------------------------------
+  # Census and population — the denominators
+  # ---------------------------------------------------------------------
+
+  - id: census-2021-ew-households
+    dataset: census-2021-ew
+    title: Census 2021 household estimates, England and Wales
+    publisher: Office for National Statistics
+    country: ew
+    url: https://www.ons.gov.uk/census
+    description: Household counts and composition by small area. The default denominator for dwelling-fire rates.
+    keywords: [census, households, denominator, population]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa21
+    key: LSOA21CD
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv]
+    reference_period: "2021-03-21"
+    update_cadence: decennial
+    superseded_by: null
+    caveats:
+      - "A single-date snapshot used as the denominator for a multi-year incident window degrades the further you get from 2021, and degrades unevenly — new estates are where it is worst, and they are places you care about."
+      - "LSOA21 only. Does not join to IMD 2019 without conversion."
+    see_also: [voa-dwellings-by-build-period, ons-mid-year-population-estimates]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: census-2022-scotland
+    dataset: census-2022-scotland
+    title: Scotland's Census 2022
+    publisher: National Records of Scotland
+    country: scotland
+    url: https://www.scotlandscensus.gov.uk/
+    description: Scottish census, run a year later than England and Wales.
+    keywords: [census, scotland, households, population]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: data-zone
+    boundary_vintage: dz11
+    key: DataZone
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv]
+    reference_period: "2022-03-20"
+    update_cadence: decennial
+    caveats:
+      - "Different census date from England and Wales — a UK-wide analysis using 'the census' is mixing 2021 and 2022 reference dates."
+      - "Output geography needs confirming; stated here as dz11 and NOT verified."
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: ons-mid-year-population-estimates
+    dataset: ons-population-estimates
+    title: Mid-year population estimates for small areas
+    publisher: Office for National Statistics
+    country: ew
+    url: https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates
+    description: Annual population estimates. What you use for inter-censal years.
+    keywords: [population, denominator, mid-year, estimates]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa21
+    key: LSOA21CD
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [xlsx, csv]
+    reference_period: "annual, 30 June"
+    update_cadence: annual
+    caveats:
+      - "Population, not households. For dwelling-fire rates a household or dwelling denominator is usually the right one; using population silently changes what the rate means."
+      - "Older vintages are published on LSOA11. Check the vintage of the specific release."
+    see_also: [census-2021-ew-households]
+    status: draft
+    entry_added: 2026-09-17
+
+  # ---------------------------------------------------------------------
+  # Geography — boundaries and the lookups that make joins legal
+  # ---------------------------------------------------------------------
+
+  - id: lsoa-2021-boundaries-ew
+    dataset: ons-lsoa-boundaries
+    title: LSOA (2021) boundaries, England and Wales
+    publisher: ONS Open Geography Portal
+    country: ew
+    url: https://geoportal.statistics.gov.uk/
+    description: Current LSOA polygons. 33,755 in England, 1,917 in Wales.
+    keywords: [boundaries, lsoa, geography, polygons]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa21
+    key: LSOA21CD
+    join_via: direct
+    geometry: polygon
+    crs: EPSG:27700
+    formats: [geopackage, shapefile, geojson]
+    reference_period: "2021"
+    update_cadence: decennial
+    supersedes: lsoa-2011-boundaries-ew
+    superseded_by: null
+    caveats:
+      - "Published in several generalisation levels. Use full resolution for analysis and a generalised version for display — mixing them produces area calculations that disagree with the map."
+      - "Counts verified against ONS Census 2021 geographies guidance, 17 Sep 2026."
+    see_also: [lsoa-2011-to-2021-lookup]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: lsoa-2011-boundaries-ew
+    dataset: ons-lsoa-boundaries
+    title: LSOA (2011) boundaries, England and Wales
+    publisher: ONS Open Geography Portal
+    country: ew
+    url: https://geoportal.statistics.gov.uk/
+    description: Previous LSOA polygons. Needed for anything published on LSOA11, including IMD 2019.
+    keywords: [boundaries, lsoa, geography, 2011]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa11
+    key: LSOA11CD
+    join_via: direct
+    geometry: polygon
+    crs: EPSG:27700
+    formats: [geopackage, shapefile, geojson]
+    reference_period: "2011"
+    update_cadence: static
+    supersedes: null
+    superseded_by: lsoa-2021-boundaries-ew
+    caveats:
+      - "Frozen — these will not change again. Anything coded to LSOA11 joins here and only here."
+      - "Still the right boundary file for IMD 2019, IMD 2015 and Home Office fire statistics coded to LSOA11. Superseded does not mean obsolete."
+    see_also: [lsoa-2011-to-2021-lookup, imd-2019]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: lsoa-2011-to-2021-lookup
+    dataset: ons-geography-lookups
+    title: LSOA (2011) to LSOA (2021) to LAD (2022) exact fit lookup, England and Wales
+    publisher: ONS Open Geography Portal
+    country: ew
+    url: https://www.data.gov.uk/dataset/03a52a27-36e7-4f33-a632-83282faea36f/lsoa-2011-to-lsoa-2021-to-local-authority-district-2022-exact-fit-lookup-for-ew-v3
+    description: The bridge between boundary generations, carrying a change indicator per LSOA.
+    keywords: [lookup, lsoa, boundary change, conversion, crosswalk]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: both
+    key: [LSOA11CD, LSOA21CD]
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv]
+    reference_period: "2021"
+    update_cadence: static
+    caveats:
+      - "Around 6% of LSOAs changed between 2011 and 2021 through splits and merges. The change indicator distinguishes unchanged, split, merged and irregular cases — read the code values from the lookup itself rather than assuming them."
+      - "Split: a parent value may be inherited by children for a rate, never for a count. Merged: children combine with a denominator weight, never a plain average. Irregular: flag and exclude from strict comparison."
+      - "A best-fit variant also exists. Exact fit and best fit are different products — know which you have."
+    see_also: [lsoa-2021-boundaries-ew, lsoa-2011-boundaries-ew]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: onspd
+    dataset: ons-postcode-products
+    title: ONS Postcode Directory
+    publisher: ONS Open Geography Portal
+    country: uk
+    url: https://geoportal.statistics.gov.uk/
+    description: Postcode to statistical geography lookup, with coordinates.
+    keywords: [postcode, lookup, onspd, nspl, geography]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: postcode
+    boundary_vintage: lsoa21
+    key: pcds
+    join_via: postcode-lookup
+    geometry: point
+    crs: EPSG:27700
+    formats: [csv]
+    reference_period: "quarterly release"
+    update_cadence: quarterly
+    caveats:
+      - "Released quarterly, and a postcode's LSOA assignment can change between releases. Stamp which release was used — an unstamped postcode join is unreproducible."
+      - "Postcode-mediated joins are second best. Prefer UPRN where you have it."
+      - "NSPL is a closely related product with different geography assignment rules. They are not interchangeable."
+    see_also: [os-open-uprn, os-addressbase-plus]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: rural-urban-classification-2021
+    dataset: ons-rural-urban-classification
+    title: Rural Urban Classification 2021
+    publisher: Office for National Statistics / Defra
+    country: ew
+    url: https://www.gov.uk/government/collections/rural-urban-classification
+    description: Settlement type per small area. A standard covariate and a standard way to stratify comparisons.
+    keywords: [rural, urban, classification, settlement, covariate]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa21
+    key: LSOA21CD
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv]
+    reference_period: "2021"
+    update_cadence: decennial
+    caveats:
+      - "Earlier versions are published on LSOA11. Confirm the vintage of the release you have."
+      - "Response times and risk profiles differ sharply by rurality — stratifying by this is usually more honest than controlling for it."
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: fra-boundaries-ew
+    dataset: ons-administrative-boundaries
+    title: Fire and Rescue Authority boundaries
+    publisher: ONS Open Geography Portal
+    country: ew
+    url: https://geoportal.statistics.gov.uk/
+    description: FRA polygons. The unit of localisation for per-service extracts.
+    keywords: [fra, fire authority, boundaries, service area]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: fra
+    boundary_vintage: none
+    key: FRA23CD
+    join_via: spatial
+    geometry: polygon
+    crs: EPSG:27700
+    formats: [geopackage, shapefile, geojson]
+    reference_period: "annual revision"
+    update_cadence: annual
+    caveats:
+      - "Boundaries change with local government reorganisation. The code suffix carries the year — FRA23CD, FRA24CD — and the codes are not stable across revisions."
+      - "Station ground boundaries are not published nationally. Those are local data held by each service."
+      - "Key field name stated here is NOT verified against the current release."
+    status: draft
+    entry_added: 2026-09-17
+
+  # ---------------------------------------------------------------------
+  # Property and address
+  # ---------------------------------------------------------------------
+
+  - id: os-open-uprn
+    dataset: os-open-data
+    title: OS Open UPRN
+    publisher: Ordnance Survey
+    country: gb
+    url: https://www.ordnancesurvey.co.uk/products/os-open-uprn
+    description: Every UPRN in Great Britain with a coordinate. Open, and often overlooked.
+    keywords: [uprn, address, property, gazetteer, open]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: uprn
+    boundary_vintage: uprn
+    key: UPRN
+    join_via: direct
+    geometry: point
+    crs: EPSG:27700
+    formats: [csv, geopackage]
+    reference_period: "current"
+    update_cadence: quarterly
+    caveats:
+      - "Coordinates and identifiers only — no address text, no classification. For property type or address matching you need AddressBase Plus."
+      - "Being open, this is the cheapest way to get a UPRN spine for a service that has no PSGA route."
+    see_also: [os-addressbase-plus]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: os-addressbase-plus
+    dataset: os-addressbase
+    title: OS AddressBase Plus
+    publisher: Ordnance Survey
+    country: gb
+    url: https://www.ordnancesurvey.co.uk/products/os-addressbase-plus
+    description: The full address gazetteer with classification. The join spine for property-level work.
+    keywords: [addressbase, uprn, gazetteer, address, classification]
+    licence: PSGA
+    tier: licensed
+    redistribution: derived-only
+    requires_agreement: Public Sector Geospatial Agreement membership
+    access: download
+    grain: uprn
+    boundary_vintage: uprn
+    key: UPRN
+    join_via: direct
+    geometry: point
+    crs: EPSG:27700
+    formats: [csv, geopackage]
+    reference_period: "six-weekly epoch"
+    update_cadence: six-weekly
+    caveats:
+      - "The match rate achieved against this is the ceiling on everything built above it. Publish it as a metric, not a footnote."
+      - "Derived outputs are generally publishable under PSGA; the raw gazetteer is not. Check your own terms before any derived coordinate reaches a browser."
+      - "Classification codes drive the ORH/NFCC property-type methodology — they map to 23 standardised categories in that work."
+    see_also: [os-open-uprn]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: epc-domestic-ew
+    dataset: energy-performance-certificates
+    title: Energy Performance of Buildings — domestic certificates
+    publisher: Ministry of Housing, Communities and Local Government
+    country: ew
+    url: https://epc.opendatacommunities.org/
+    description: Lodged EPCs with dwelling characteristics. A property-level covariate source with a large asterisk.
+    keywords: [epc, energy, dwelling type, property, building]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: api
+    grain: uprn
+    boundary_vintage: uprn
+    key: UPRN
+    join_via: gazetteer
+    geometry: none
+    crs: null
+    formats: [csv, api]
+    reference_period: "lodgement date per certificate"
+    update_cadence: continuous
+    caveats:
+      - "A lodgement register, not a survey. A dwelling appears only if a certificate was lodged, and its data is as-of that lodgement, not today."
+      - "Coverage is NOT missing at random — recently sold and rented properties are over-represented, which correlates with tenure, which correlates with risk. Treat EPC-derived dwelling type as partially observed, and report coverage by tenure and property type."
+      - "UPRN is present on many but not all records. Expect to match the remainder through the gazetteer."
+    see_also: [os-addressbase-plus]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: voa-dwellings-by-build-period
+    dataset: voa-council-tax-stock
+    title: Dwellings by property build period and type, LSOA and MSOA
+    publisher: Valuation Office Agency
+    country: ew
+    url: https://ckan.publishing.service.gov.uk/dataset/dwellings-by-property-build-period-and-type-lsoa-and-msoa
+    description: Dwelling counts by age band and type. A denominator and a covariate in one.
+    keywords: [dwellings, council tax, ctsop, housing stock, build period, denominator]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa11
+    key: LSOA11CD
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv]
+    reference_period: "annual snapshot"
+    update_cadence: annual
+    caveats:
+      - "Often the better dwelling denominator than the census for inter-censal years, because it is annual."
+      - "Boundary vintage varies by release and older releases are LSOA11. Verify per release — stated here as lsoa11 and NOT verified for the current one."
+      - "Build period is a genuine fire-risk covariate and is otherwise hard to obtain at area level."
+    see_also: [census-2021-ew-households]
+    status: draft
+    entry_added: 2026-09-17
+
+  # ---------------------------------------------------------------------
+  # Outcomes and commercial
+  # ---------------------------------------------------------------------
+
+  - id: fire-incidents-published
+    dataset: home-office-fire-statistics
+    title: Fire statistics — incident level datasets
+    publisher: Home Office
+    country: england
+    url: https://www.gov.uk/government/statistics/fire-statistics-incident-level-datasets
+    description: Published incident records derived from IRS. The open outcome data.
+    keywords: [incidents, fire, irs, outcomes, home office, dwelling fires]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    access: download
+    grain: lsoa
+    boundary_vintage: lsoa11
+    key: LSOA code
+    join_via: direct
+    geometry: none
+    crs: null
+    formats: [csv]
+    reference_period: "2010/11 onwards"
+    update_cadence: annual
+    caveats:
+      - "Published extracts, not your own IRS. Address-level incident locations are personal data and are not in here."
+      - "A 15-year pooling window spans three LSOA generations and four deprivation releases. Confirm which boundary generation each year is coded to before pooling."
+      - "Dwelling fires are rare. At LSOA level over one year you are working with counts of zero, one and two, where the apparent rate is dominated by noise."
+    see_also: [imd-2025, census-2021-ew-households]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: acorn-household
+    dataset: caci-acorn
+    title: CACI Household Acorn
+    publisher: CACI
+    country: uk
+    url: https://www.caci.co.uk/datasets/household-acorn/
+    description: Commercial geodemographic segmentation at household level.
+    keywords: [acorn, geodemographic, segmentation, caci, household]
+    licence: commercial
+    tier: licensed
+    redistribution: check-contract
+    requires_agreement: >
+      Commercial contract. Free to UK police forces and fire and rescue services
+      under CACI's Police & Fire Data Initiative, subject to contract —
+      https://info.caci.co.uk/police-and-fire-data-initiative
+    access: request
+    grain: uprn
+    boundary_vintage: uprn
+    key: UPRN
+    join_via: gazetteer
+    geometry: none
+    crs: null
+    formats: [csv]
+    reference_period: "build version"
+    update_cadence: irregular
+    caveats:
+      - "Periodically rebuilt. A household's Acorn type is not stable across builds, so a rebuild silently changes any model predictor derived from it. Record the build version."
+      - "Redistribution is the clause that matters. Establish whether a derived band may reach a browser, or a partner, before designing anything that assumes it can."
+      - "Acorn describes areas and types, not households. Inferring a household attribute from an Acorn average — as the Hertfordshire model does for smoking — is a documented simplification, not a measurement."
+      - "Cannot appear in any open demonstration dataset."
+    status: draft
+    entry_added: 2026-09-17
+
+  # ---------------------------------------------------------------------
+  # Historical stubs
+  #
+  # Carried for reference only, so that `supersedes` chains resolve and so
+  # that the vintage of a superseded release is answerable without research.
+  # Thin by design: identity, geography, comparability. No resources, no
+  # fetch path — nobody should be building new work on these.
+  #
+  # `superseded_by` alone means "not the current release". IMD 2019 is
+  # superseded and is NOT historical, because live models still use it.
+  # `historical: true` means "we carry this so you can look it up".
+  # ---------------------------------------------------------------------
+
+  - id: imd-2015
+    dataset: english-indices-of-deprivation
+    title: English Indices of Deprivation 2015
+    publisher: Department for Communities and Local Government
+    country: england
+    url: https://www.gov.uk/government/statistics/english-indices-of-deprivation-2015
+    description: Superseded English deprivation index. Reference only.
+    keywords: [deprivation, imd, iod, 2015, historical]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    grain: lsoa
+    boundary_vintage: lsoa11
+    key: LSOA11CD
+    join_via: direct
+    geometry: none
+    crs: null
+    reference_period: "2012–2013 (most indicators)"
+    update_cadence: irregular
+    historical: true
+    supersedes: imd-2010
+    superseded_by: imd-2019
+    caveats:
+      - "On LSOA11, same as IMD 2019. Boundary generations verified against OHID technical guidance, 17 Sep 2026."
+      - "Methodologically comparable with IMD 2010 and 2019 — the three form a usable series. IoD 2025 does not join that series."
+    comparable_with: [imd-2010, imd-2019]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: imd-2010
+    dataset: english-indices-of-deprivation
+    title: English Indices of Deprivation 2010
+    publisher: Department for Communities and Local Government
+    country: england
+    url: https://www.gov.uk/government/statistics/english-indices-of-deprivation-2010
+    description: Superseded English deprivation index, and the oldest release worth carrying. Reference only.
+    keywords: [deprivation, imd, iod, 2010, historical]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    grain: lsoa
+    boundary_vintage: lsoa01
+    key: LSOA01CD
+    join_via: best-fit-lookup
+    geometry: none
+    crs: null
+    reference_period: "2008 (most indicators)"
+    update_cadence: irregular
+    historical: true
+    supersedes: null
+    superseded_by: imd-2015
+    caveats:
+      - "On LSOA01 — a third boundary generation, and the reason a long deprivation series crosses two boundary changes rather than one. Verified against OHID technical guidance, 17 Sep 2026."
+      - "OHID publish versions adjusted onto later boundaries. Use those rather than converting LSOA01 yourself."
+      - "Chain terminates here. Earlier releases exist and are not carried."
+    comparable_with: [imd-2015, imd-2019]
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: wimd-2019
+    dataset: welsh-index-of-multiple-deprivation
+    title: Welsh Index of Multiple Deprivation 2019
+    publisher: Welsh Government
+    country: wales
+    url: https://www.gov.wales/welsh-index-multiple-deprivation-full-index-update-ranks-2019
+    description: Superseded Welsh deprivation index. Reference only.
+    keywords: [deprivation, wimd, wales, 2019, historical]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    grain: lsoa
+    boundary_vintage: lsoa11
+    key: LSOA11CD
+    join_via: direct
+    geometry: none
+    crs: null
+    reference_period: "2019"
+    update_cadence: irregular
+    historical: true
+    supersedes: null
+    superseded_by: wimd-2025
+    caveats:
+      - "Widely cited as current until the 2025 release. Anything describing WIMD 2019 as the latest version predates 2025."
+      - "Boundary vintage stated as lsoa11 and NOT verified."
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: simd-2016
+    dataset: scottish-index-of-multiple-deprivation
+    title: Scottish Index of Multiple Deprivation 2016
+    publisher: Scottish Government
+    country: scotland
+    url: https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2016/
+    description: Superseded Scottish deprivation index. Reference only.
+    keywords: [deprivation, simd, scotland, 2016, historical]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    grain: data-zone
+    boundary_vintage: dz11
+    key: DataZone
+    join_via: direct
+    geometry: none
+    crs: null
+    reference_period: "2016"
+    update_cadence: irregular
+    historical: true
+    supersedes: null
+    superseded_by: simd-2020
+    caveats:
+      - "SIMD 2012 and earlier used different data zone geographies again. The chain terminates here for that reason — going further back crosses a geography change with no clean lookup."
+      - "Boundary vintage stated as dz11 and NOT verified."
+    status: draft
+    entry_added: 2026-09-17
+
+  - id: nimdm-2010
+    dataset: ni-multiple-deprivation-measure
+    title: Northern Ireland Multiple Deprivation Measure 2010
+    publisher: Northern Ireland Statistics and Research Agency
+    country: northern-ireland
+    url: https://www.nisra.gov.uk/statistics/deprivation/northern-ireland-multiple-deprivation-measure-2010-nimdm2010
+    description: Superseded Northern Ireland deprivation measure. Reference only.
+    keywords: [deprivation, nimdm, northern ireland, 2010, historical]
+    licence: OGL-UK-3.0
+    tier: open
+    redistribution: attribution
+    grain: soa
+    boundary_vintage: soa01
+    key: SOA Code
+    join_via: direct
+    geometry: none
+    crs: null
+    reference_period: "2010"
+    update_cadence: irregular
+    historical: true
+    supersedes: null
+    superseded_by: nimdm-2017
+    caveats:
+      - "Boundary vintage stated as soa01 and NOT verified."
+    status: draft
+    entry_added: 2026-09-17
