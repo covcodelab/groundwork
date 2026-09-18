@@ -18,14 +18,13 @@ import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
-from groundwork.findings import Finding, Severity, sort_key, summarise
-
 from groundwork.catalogue.model import (
     GRAIN_VINTAGES,
     REQUIRED_FIELDS,
     VOCABULARIES,
     Catalogue,
 )
+from groundwork.findings import Finding, Severity, sort_key
 
 ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 UNVERIFIED = re.compile(r"NOT verified", re.IGNORECASE)
@@ -74,7 +73,9 @@ def required_fields(cat: Catalogue) -> Iterator[Finding]:
     for e in cat.entries:
         for f in REQUIRED_FIELDS:
             if f not in e.raw:
-                yield Finding("C002", Severity.ERROR, "required by the schema", subject=e.id, field=f)
+                yield Finding(
+                    "C002", Severity.ERROR, "required by the schema", subject=e.id, field=f
+                )
 
 
 @rule("C003", "id-format", Severity.ERROR)
@@ -82,9 +83,11 @@ def id_format(cat: Catalogue) -> Iterator[Finding]:
     for e in cat.entries:
         if not ID_PATTERN.match(e.id):
             yield Finding(
-                "C003", Severity.ERROR,
+                "C003",
+                Severity.ERROR,
                 "must be a lowercase hyphenated slug",
-                subject=e.id, field="id",
+                subject=e.id,
+                field="id",
             )
 
 
@@ -102,11 +105,13 @@ def controlled_vocabulary(cat: Catalogue) -> Iterator[Finding]:
                 continue
             if value not in vocab:
                 yield Finding(
-                    "V001", Severity.ERROR,
+                    "V001",
+                    Severity.ERROR,
                     f"'{value}' is not a recognised value "
                     f"(expected one of {sorted(vocab)}); "
                     f"if it is legitimate, add it to the vocabulary in model.py",
-                    subject=e.id, field=f,
+                    subject=e.id,
+                    field=f,
                 )
 
 
@@ -122,10 +127,12 @@ def references_resolve(cat: Catalogue) -> Iterator[Finding]:
         for f, target in e.refs():
             if target not in known:
                 yield Finding(
-                    "R001", Severity.ERROR,
+                    "R001",
+                    Severity.ERROR,
                     f"'{target}' is not an entry in this catalogue — "
                     f"add a historical stub, or fix the reference",
-                    subject=e.id, field=f,
+                    subject=e.id,
+                    field=f,
                 )
 
 
@@ -149,16 +156,20 @@ def chain_symmetry(cat: Catalogue) -> Iterator[Finding]:
         older = e.get("supersedes")
         if older and older in by_id and by_id[older].get("superseded_by") != e.id:
             yield Finding(
-                "R003", Severity.ERROR,
+                "R003",
+                Severity.ERROR,
                 f"'{older}' does not declare superseded_by: {e.id}",
-                subject=e.id, field="supersedes",
+                subject=e.id,
+                field="supersedes",
             )
         newer = e.get("superseded_by")
         if newer and newer in by_id and by_id[newer].get("supersedes") != e.id:
             yield Finding(
-                "R003", Severity.ERROR,
+                "R003",
+                Severity.ERROR,
                 f"'{newer}' does not declare supersedes: {e.id}",
-                subject=e.id, field="superseded_by",
+                subject=e.id,
+                field="superseded_by",
             )
 
 
@@ -173,9 +184,11 @@ def chain_terminates(cat: Catalogue) -> Iterator[Finding]:
                 break  # R001 reports the dangling reference
             if nxt in seen:
                 yield Finding(
-                    "R004", Severity.ERROR,
+                    "R004",
+                    Severity.ERROR,
                     f"release chain cycles at '{nxt}'",
-                    subject=e.id, field="supersedes",
+                    subject=e.id,
+                    field="supersedes",
                 )
                 break
             seen.add(nxt)
@@ -197,9 +210,11 @@ def incomparability_is_mutual(cat: Catalogue) -> Iterator[Finding]:
             other = by_id.get(target)
             if other is not None and e.id not in other.not_comparable_ids():
                 yield Finding(
-                    "R005", Severity.WARNING,
+                    "R005",
+                    Severity.WARNING,
                     f"'{target}' does not declare the reverse incompatibility",
-                    subject=e.id, field="not_comparable_with",
+                    subject=e.id,
+                    field="not_comparable_with",
                 )
 
 
@@ -213,9 +228,11 @@ def historical_implies_superseded(cat: Catalogue) -> Iterator[Finding]:
     for e in cat.entries:
         if e.is_historical and not e.get("superseded_by"):
             yield Finding(
-                "S001", Severity.ERROR,
+                "S001",
+                Severity.ERROR,
                 "marked historical but nothing supersedes it",
-                subject=e.id, field="historical",
+                subject=e.id,
+                field="historical",
             )
 
 
@@ -227,10 +244,12 @@ def grain_vintage_coherent(cat: Catalogue) -> Iterator[Finding]:
         allowed = GRAIN_VINTAGES.get(grain)
         if allowed and vintage and vintage not in allowed:
             yield Finding(
-                "S002", Severity.ERROR,
+                "S002",
+                Severity.ERROR,
                 f"grain '{grain}' with boundary_vintage '{vintage}' "
                 f"(expected one of {sorted(allowed)})",
-                subject=e.id, field="boundary_vintage",
+                subject=e.id,
+                field="boundary_vintage",
             )
 
 
@@ -240,15 +259,19 @@ def geometry_crs_agree(cat: Catalogue) -> Iterator[Finding]:
         geom, crs = e.get("geometry"), e.get("crs")
         if geom and geom != "none" and not crs:
             yield Finding(
-                "S003", Severity.ERROR,
+                "S003",
+                Severity.ERROR,
                 f"geometry is '{geom}' but no crs is declared",
-                subject=e.id, field="crs",
+                subject=e.id,
+                field="crs",
             )
         if geom == "none" and crs:
             yield Finding(
-                "S003", Severity.ERROR,
+                "S003",
+                Severity.ERROR,
                 f"geometry is 'none' but crs is '{crs}'",
-                subject=e.id, field="crs",
+                subject=e.id,
+                field="crs",
             )
 
 
@@ -257,10 +280,12 @@ def restricted_needs_agreement(cat: Catalogue) -> Iterator[Finding]:
     for e in cat.entries:
         if e.get("tier") in {"licensed", "restricted"} and not e.get("requires_agreement"):
             yield Finding(
-                "S004", Severity.WARNING,
+                "S004",
+                Severity.WARNING,
                 "tier is not open but no agreement is described — "
                 "a prospective user cannot tell what they need",
-                subject=e.id, field="requires_agreement",
+                subject=e.id,
+                field="requires_agreement",
             )
 
 
@@ -269,10 +294,12 @@ def open_tier_redistribution(cat: Catalogue) -> Iterator[Finding]:
     for e in cat.entries:
         if e.get("tier") == "open" and e.get("redistribution") in {"check-contract", "prohibited"}:
             yield Finding(
-                "S005", Severity.WARNING,
+                "S005",
+                Severity.WARNING,
                 f"tier is 'open' but redistribution is '{e.get('redistribution')}' — "
                 "one of the two is wrong",
-                subject=e.id, field="redistribution",
+                subject=e.id,
+                field="redistribution",
             )
 
 
@@ -281,9 +308,11 @@ def direct_join_needs_key(cat: Catalogue) -> Iterator[Finding]:
     for e in cat.entries:
         if e.get("join_via") == "direct" and not e.get("key"):
             yield Finding(
-                "S006", Severity.WARNING,
+                "S006",
+                Severity.WARNING,
                 "join_via is 'direct' but no key column is named",
-                subject=e.id, field="key",
+                subject=e.id,
+                field="key",
             )
 
 
@@ -300,9 +329,11 @@ def reviewed_entries_are_verified(cat: Catalogue) -> Iterator[Finding]:
         for caveat in e.get("caveats") or []:
             if UNVERIFIED.search(str(caveat)):
                 yield Finding(
-                    "S007", Severity.ERROR,
+                    "S007",
+                    Severity.ERROR,
                     "status is 'reviewed' but a caveat still says NOT verified",
-                    subject=e.id, field="status",
+                    subject=e.id,
+                    field="status",
                 )
                 break
 
@@ -320,9 +351,11 @@ def has_caveats(cat: Catalogue) -> Iterator[Finding]:
             continue
         if not e.get("caveats"):
             yield Finding(
-                "W001", Severity.WARNING,
+                "W001",
+                Severity.WARNING,
                 "no caveats recorded — this is the field the catalogue exists for",
-                subject=e.id, field="caveats",
+                subject=e.id,
+                field="caveats",
             )
 
 
@@ -330,9 +363,17 @@ def has_caveats(cat: Catalogue) -> Iterator[Finding]:
 def searchable(cat: Catalogue) -> Iterator[Finding]:
     for e in cat.entries:
         if not e.get("keywords"):
-            yield Finding("W002", Severity.WARNING, "no keywords — search will miss this", subject=e.id, field="keywords")
+            yield Finding(
+                "W002",
+                Severity.WARNING,
+                "no keywords — search will miss this",
+                subject=e.id,
+                field="keywords",
+            )
         if not e.get("description"):
-            yield Finding("W002", Severity.WARNING, "no description", subject=e.id, field="description")
+            yield Finding(
+                "W002", Severity.WARNING, "no description", subject=e.id, field="description"
+            )
 
 
 # ---------------------------------------------------------------------------
